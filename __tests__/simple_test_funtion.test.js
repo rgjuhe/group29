@@ -1,4 +1,4 @@
-const add = require('../src/simple_test_fucntion');  // Import the add function
+const add = require('../src/simple_test_fucntion');
 
 describe('add function', () => {
   test('should correctly add two numbers', () => {
