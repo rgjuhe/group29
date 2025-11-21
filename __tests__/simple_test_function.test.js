@@ -1,4 +1,4 @@
-const add = require('../src/simple_test_fucntion');
+const add = require('../src/simple_test_function');
 
 describe('add function', () => {
   test('should correctly add two numbers', () => {
