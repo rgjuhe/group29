@@ -26,3 +26,9 @@ jobs:
       # Step 4: Run Jest tests with coverage
       - name: Run Jest tests
         run: npm test
+        
+      # Step 5: Generate Coveralls report
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
