@@ -25,4 +25,4 @@ jobs:
 
       # Step 4: Run Jest tests with coverage
       - name: Run Jest tests
-        run: npm test --coverage
+        run: npm test
