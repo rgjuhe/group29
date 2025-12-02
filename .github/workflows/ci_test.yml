@@ -23,6 +23,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Run Jest tests
+      # Step 4: Run Jest tests with coverage
       - name: Run Jest tests
-        run: npm test
+        run: npm test --coverage
