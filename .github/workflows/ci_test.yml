@@ -37,6 +37,11 @@ jobs:
         run: |
           failed_cases=$(jq -c -r '.testResults[] | select(.status == "failed") | .assertionResults[] | select(.status == "failed") | {suite: .ancestorTitles | join(" > "), test_name: .title}' test-results.json)
           
+          if [ -z "$failed_cases" ]; then
+            echo "No failed test cases."
+            exit 0
+          fi
+          
           echo "$failed_cases" | while IFS= read -r case; do
             suite_name=$(echo "$case" | jq -r '.suite')
             test_name=$(echo "$case" | jq -r '.test_name')
