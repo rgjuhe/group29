@@ -47,7 +47,7 @@ jobs:
             existing_issue=$(gh issue list --repo "${{ github.repository }}" --search "$ISSUE_TITLE" --json title --jq ".[] | select(.title == \"$ISSUE_TITLE\")")
 
             if [ -z "$existing_issue" ]; then
-              gh issue create --title "$ISSUE_TITLE" --body "$ISSUE_BODY"--repo "${{ github.repository }}"
+              gh issue create --title "$ISSUE_TITLE" --body "$ISSUE_BODY" --repo "${{ github.repository }}"
             fi
           done
 
