@@ -28,6 +28,27 @@ jobs:
         run: npm test -- --json --outputFile=test-results.json
         continue-on-error: true
         
+      # Step 5: Create issue if failing testsuite found
+      - name: Create an issue if tests fail
+        if: failure()
+        run: |
+          failed_cases=$(jq -r '.testResults[] | select(.status == "failed") | {suite: .name, failed_tests: .assertionResults[] | select(.status == "failed") | {test_name: .fullName, failure_message: .failureMessages[]}}' test-results.json)
+
+          echo "$failed_cases" | while IFS= read -r case; do
+          
+            suite_name=$(echo "$case" | jq -r '.suite')
+            test_name=$(echo "$case" | jq -r '.failed_tests.test_name')
+
+            ISSUE_TITLE="Failure in $suite_name - $test_name"
+            ISSUE_BODY="**Test Suite**: $suite_name\n**Test Case**: $test_name\n"
+
+            existing_issue=$(gh issue list --repo "${{ github.repository }}" --search "$ISSUE_TITLE" --json title --jq ".[] | select(.title == \"$ISSUE_TITLE\")")
+
+            if [ -z "$existing_issue" ]; then
+              gh issue create --title "$ISSUE_TITLE" --body "$ISSUE_BODY" --repo "${{ github.repository }}" --token ${{ secrets.GITHUB_TOKEN }}
+            fi
+          done
+        
       # Step 5: Generate Coveralls report
       - name: Coveralls
         uses: coverallsapp/github-action@v2
