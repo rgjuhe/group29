@@ -19,4 +19,7 @@ describe('my_test suite', () => {
     expect(add(-1, 1)).toBe(5);
     expect(add(0, 0)).toBe(5);
   });
+  test('tests should fail 3', () => {
+    expect(add(1, 2)).toBe(0);
+  });
 });
