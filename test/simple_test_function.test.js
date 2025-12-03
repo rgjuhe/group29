@@ -7,3 +7,11 @@ describe('add function', () => {
     expect(add(0, 0)).toBe(0);
   });
 });
+
+describe('testcase fail', () => {
+  test('tests should fail', () => {
+    expect(add(1, 2)).toBe(5);
+    expect(add(-1, 1)).toBe(5);
+    expect(add(0, 0)).toBe(5);
+  });
+});

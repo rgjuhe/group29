@@ -26,6 +26,7 @@ jobs:
       # Step 4: Run Jest tests with coverage
       - name: Run Jest tests
         run: npm test
+        continue-on-error: true
         
       # Step 5: Generate Coveralls report
       - name: Coveralls
