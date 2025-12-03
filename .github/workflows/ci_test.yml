@@ -42,7 +42,7 @@ jobs:
             test_name=$(echo "$case" | jq -r '.test_name')
             
             ISSUE_TITLE="Failure in $suite_name - $test_name"
-            ISSUE_BODY="**Test Suite**: $suite_name$'\n'**Test Case**: $test_name$'\n'"
+            ISSUE_BODY="**Test Suite**: $suite_name '\n' **Test Case**: $test_name '\n' "
 
             existing_issue=$(gh issue list --repo "${{ github.repository }}" --search "$ISSUE_TITLE" --json title --jq ".[] | select(.title == \"$ISSUE_TITLE\")")
 
