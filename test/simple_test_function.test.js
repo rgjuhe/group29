@@ -8,8 +8,13 @@ describe('add function', () => {
   });
 });
 
-describe('testcase fail', () => {
-  test('tests should fail', () => {
+describe('my_test suite', () => {
+  test('tests should fail 1', () => {
+    expect(add(1, 2)).toBe(5);
+    expect(add(-1, 1)).toBe(5);
+    expect(add(0, 0)).toBe(5);
+  });
+  test('tests should fail 2', () => {
     expect(add(1, 2)).toBe(5);
     expect(add(-1, 1)).toBe(5);
     expect(add(0, 0)).toBe(5);
