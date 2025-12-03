@@ -31,7 +31,7 @@ jobs:
       # Step 5: Create issue if failing testsuite found
       - name: Create an issue if tests fail
         run: |
-          failed_cases=$(jq -r '.testResults[] | select(.status == "failed") | {suite: .name, failed_tests: [.assertionResults[] | select(.status == "failed") | {test_name: .fullName}]} ' test-results.json)'
+          failed_cases=$(jq -r '.testResults[] | select(.status == "failed") | {suite: .name, failed_tests: [.assertionResults[] | select(.status == "failed") | {test_name: .fullName}]} ' test-results.json)
           echo "$failed_cases" | while IFS= read -r case; do
           
             suite_name=$(echo "$case" | jq -r '.suite')
