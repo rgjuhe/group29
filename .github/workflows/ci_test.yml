@@ -35,7 +35,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          failed_cases=$(jq -c -r '.testResults[] | select(.status == "failed") | {suite: .name, failed_tests: [.assertionResults[] | select(.status == "failed") | {test_name: .fullName}]} ' test-results.json)
+          failed_cases=$(jq -c -r '.testResults[] | select(.status == "failed") | {suite: .assertionResults[0].ancestorTitles | join(" > "), failed_tests: [.assertionResults[] | select(.status == "failed") | {test_name: .title}]} ' test-results.json)
           
           echo "$failed_cases" | while IFS= read -r case; do
             suite_name=$(echo "$case" | jq -r '.suite')
