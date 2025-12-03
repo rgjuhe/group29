@@ -31,15 +31,16 @@ jobs:
       # Step 5: Create issue if failing testsuite found
       - name: Create an issue if tests fail
         run: |
-          failed_cases=$(jq -r '.testResults[] | select(.status == "failed") | {suite: .name, failed_tests: [.assertionResults[] | select(.status == "failed") | {test_name: .fullName}]} ' test-results.json)
-          echo "$failed_cases" | while IFS= read -r case; do
+          failed_cases=$(jq -c -r '.testResults[] | select(.status == "failed") | {suite: .name, failed_tests: [.assertionResults[] | select(.status == "failed") | {test_name: .fullName}]} ' test-results.json)
           
+          echo "$failed_cases" | while IFS= read -r case; do
             suite_name=$(echo "$case" | jq -r '.suite')
-            test_name=$(echo "$case" | jq -r '.failed_tests.test_name')
-
+            test_name=$(echo "$case" | jq -r '.failed_tests[].test_name')
+            
             ISSUE_TITLE="Failure in $suite_name - $test_name"
             ISSUE_BODY="**Test Suite**: $suite_name\n**Test Case**: $test_name\n"
           done
+
       # Step 5: Generate Coveralls report
       - name: Coveralls
         uses: coverallsapp/github-action@v2
