@@ -39,6 +39,12 @@ jobs:
             
             ISSUE_TITLE="Failure in $suite_name - $test_name"
             ISSUE_BODY="**Test Suite**: $suite_name\n**Test Case**: $test_name\n"
+
+            existing_issue=$(gh issue list --repo "${{ github.repository }}" --search "$ISSUE_TITLE" --json title --jq ".[] | select(.title == \"$ISSUE_TITLE\")")
+
+            if [ -z "$existing_issue" ]; then
+              gh issue create --title "$ISSUE_TITLE" --body "$ISSUE_BODY" --repo "${{ github.repository }}" --token ${{ secrets.GITHUB_TOKEN }}
+            fi
           done
 
       # Step 5: Generate Coveralls report
