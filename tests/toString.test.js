@@ -1,8 +1,6 @@
-jest.mock("../src/isSymbol", () => jest.fn());
-import toString from "../src/toString";
-import isSymbol from "../src/isSymbol";
-
-const INFINITY = 1 / 0;
+jest.mock("../materials_from_course/src/isSymbol", () => jest.fn());
+import toString from "../materials_from_course/src/toString";
+import isSymbol from "../materials_from_course/src/isSymbol";
 
 test("converts to string", () => {
     // Setting isSymbol off so it doesn't trigger the if-clause
