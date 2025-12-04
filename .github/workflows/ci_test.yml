@@ -1,5 +1,5 @@
 name: Test running tests
-run-name: Testing if test workflow works
+run-name: Automated testing, Jussi
 on:
   push:
     branches:
