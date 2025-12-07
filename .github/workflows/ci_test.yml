@@ -27,37 +27,24 @@ jobs:
 
       # Step 4: Run Jest tests with coverage
       - name: Run Jest tests
-        run: npm test -- --reporters=default --reporters=jest-junit
-        continue-on-error: true
+        run: npm test -- --json --outputFile=test-results.json
+        continue-on-error: true 
 
-      - name: Upload JUnit report artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: junit-report
-          path: junit.xml
-          
-      # Step 5: Install XML tools for generating issues
-      - name: Install XML tools
-        run: sudo apt-get install -y xmlstarlet  
-
-      # Step 6: Create issue if failing testsuite found
+      # Step 5: Create issue if failing testsuite found
       - name: Create an issue if tests fail
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          failed_cases=$(xmlstarlet sel -t \
-            -m "/testsuites/testsuite/testcase[failure]" \
-            -v "concat(/testsuites/testsuite/@name, ':', @classname)" -n \
-            junit.xml)
+          failed_cases=$(jq -c -r '.testResults[] | select(.status == "failed") | .assertionResults[] | select(.status == "failed") | {suite: .ancestorTitles | join(" > "), test_name: .title}' test-results.json)
             
           if [ -z "$failed_cases" ]; then
             echo "No failed tests"
             exit 0
           fi
 
-          echo "$failed_cases" | while read -r entry; do
-            suite_name=$(echo "$entry" | cut -d":" -f1)
-            test_name=$(echo "$entry" | cut -d":" -f2)
+          echo "$failed_cases" | while IFS= read -r case; do
+            suite_name=$(echo "$case" | jq -r '.suite')
+            test_name=$(echo "$case" | jq -r '.test_name')
             
             ISSUE_TITLE="Failure in $suite_name - $test_name"
             ISSUE_BODY="**Test Suite**: $suite_name, **Test Case**: $test_name"
@@ -73,7 +60,7 @@ jobs:
             fi
           done
 
-      # Step 7: Generate Coveralls report
+      # Step 6: Generate Coveralls report
       - name: Coveralls
         uses: coverallsapp/github-action@v2
         with:
