@@ -1,6 +1,9 @@
 import at from '../materials_from_course/src/at';
 import baseAt from '../materials_from_course/src/.internal/baseAt.js';
+import baseFlatten from '../materials_from_course/src/.internal/baseFlatten.js';
 jest.mock('../materials_from_course/src/.internal/baseAt.js', () => jest.fn());
+jest.mock('../materials_from_course/src/.internal/baseFlatten.js', () => jest.fn());
+
 
 describe('should return correct value for object without arrays', () => {
   const object = { 'a': { 'b': 1 } };
