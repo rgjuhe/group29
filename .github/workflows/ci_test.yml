@@ -47,7 +47,7 @@ jobs:
         run: |
           failed_cases=$(xmlstarlet sel -t \
             -m "/testsuites/testsuite/testcase[failure]" \
-            -v "concat(/testsuite/@name, ':', @classname)" -n \
+            -v "concat(/testsuites/testsuite/@name, ':', @classname)" -n \
             junit.xml)
             
           if [ -z "$failed_cases" ]; then
