@@ -6,6 +6,7 @@ jest.mock('../materials_from_course/src/.internal/createMathOperation.js', () =>
 }));
 
 describe("should add two integers correctly", () => {
+  let add;
   beforeAll( () => {
     jest.resetModules();
     mockCreateMathOperation.mockImplementation( () => (a,b) => a+b);
@@ -32,6 +33,7 @@ describe("should add two integers correctly", () => {
 });
 
 describe("should add two decimal numbers correctly", () => {
+  let add;
   beforeAll( () => {
     jest.resetModules();
     mockCreateMathOperation.mockImplementation( () => (a,b) => a+b);
@@ -55,6 +57,7 @@ describe("should add two decimal numbers correctly", () => {
 });
 
 describe("should handle undefined inputs", () => {
+  let add;
   beforeAll( () => {
     jest.resetModules();
     mockCreateMathOperation.mockImplementation( () => (a,b) => {
@@ -75,6 +78,7 @@ describe("should handle undefined inputs", () => {
 });
 
 describe("should return NaN with wrong type of input", () => {
+  let add;
   beforeAll( () => {
     jest.resetModules();
     mockCreateMathOperation.mockImplementation( () => (a,b) => {
