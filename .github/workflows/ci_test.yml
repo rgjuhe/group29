@@ -35,8 +35,12 @@ jobs:
         with:
           name: junit-report
           path: junit.xml
+          
+      # Step 5: Install XML tools for generating issues
+      - name: Install XML tools
+        run: sudo apt-get install -y xmlstarlet  
 
-      # Step 5: Create issue if failing testsuite found
+      # Step 6: Create issue if failing testsuite found
       - name: Create an issue if tests fail
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -69,7 +73,7 @@ jobs:
             fi
           done
 
-      # Step 6: Generate Coveralls report
+      # Step 7: Generate Coveralls report
       - name: Coveralls
         uses: coverallsapp/github-action@v2
         with:
