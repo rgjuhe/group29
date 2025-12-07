@@ -47,7 +47,7 @@ jobs:
         run: |
           failed_cases=$(xmlstarlet sel -t \
             -m "/testsuites/testsuite/testcase[failure]" \
-            -v "concat(/testsuite/@name, '::', @classname)" -n \
+            -v "concat(/testsuite/@name, ':', @classname)" -n \
             junit.xml)
             
           if [ -z "$failed_cases" ]; then
@@ -56,8 +56,8 @@ jobs:
           fi
 
           echo "$failed_cases" | while read -r entry; do
-            suite_name=$(echo "$entry" | cut -d"::" -f1)
-            test_name=$(echo "$entry" | cut -d"::" -f2)
+            suite_name=$(echo "$entry" | cut -d":" -f1)
+            test_name=$(echo "$entry" | cut -d":" -f2)
             
             ISSUE_TITLE="Failure in $suite_name - $test_name"
             ISSUE_BODY="**Test Suite**: $suite_name, **Test Case**: $test_name"
