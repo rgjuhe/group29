@@ -2,40 +2,80 @@ jest.mock("../materials_from_course/src/isSymbol", () => jest.fn());
 import toString from "../materials_from_course/src/toString";
 import isSymbol from "../materials_from_course/src/isSymbol";
 
-test("converts to string", () => {
-    // Setting isSymbol off so it doesn't trigger the if-clause
-    isSymbol.mockReturnValue(false);
+describe("should return any string value back as it is", () => {
 
-    // Testing a simple string value
-    expect(toString("hello")).toBe("hello");
+    test("should return hello for hello", () => {
+        isSymbol.mockReturnValue(false);
+        expect(toString("hello")).toBe("hello");
+    });
 
-    // Testing both cases for array values, normal array and an array with null value
-    expect(toString([1, 2, "hello", 5])).toBe("1,2,hello,5");
-    expect(toString([1, null, "hi", 32])).toBe("1,,hi,32");
+    test("should return null as empty string", () => {
+        isSymbol.mockReturnValue(false);
+        expect(toString(null)).toBe("");
+    });
 
-    // Testing with a symbol, setting the isSymbol mock function 
-    // return value to true so the if-clause will go through
-    isSymbol.mockReturnValue(true);
-    const symbol1 = Symbol("hello");
-    expect(toString(symbol1)).toBe("Symbol(hello)");
-
-    isSymbol.mockReturnValue(false);
-
-    // Testing with integer values, case 1 where the value is -0
-    // and case 2 where the integer is more generic value
-    // case 3 for a negative value
-    let result = -0;
-    expect(toString(result)).toBe("-0");
-    
-    result = 1209;
-    expect(toString(result)).toBe("1209");
-
-    result = -52;
-    expect(toString(result)).toBe("-52");
-
-    // Lastly testing with an object, which probably will 
-    // not be used in any real cases
-    const randomObject = {"hello": 1, "hi": 50};
-    expect(toString(randomObject)).toBe("[object Object]");
 });
+
+describe("should return array values as string, where values are separated by comma", () => {
+
+    test("should return array of different element types as string", () => {
+        isSymbol.mockReturnValue(false);
+        expect(toString([1, 2, "hello", 5])).toBe("1,2,hello,5");
+    });
+
+    test("should return array with same elements as string", () => {
+        isSymbol.mockReturnValue(false);
+        expect(toString([1, 2, 31, 5])).toBe("1,2,31,5");
+    });
+
+    test("should return array with null as string where null is an empty value", () => {
+        isSymbol.mockReturnValue(false);
+        expect(toString([1, null, "hi", 32])).toBe("1,,hi,32");
+    });
+});
+
+describe("should return symbol as string", () => {
+
+    test("should return symbol as string", () => {
+        isSymbol.mockReturnValue(true);
+        const symbol1 = Symbol("hello");
+        expect(toString(symbol1)).toBe("Symbol(hello)");
+    });
+
+});
+
+describe("should return number as string", () => {
+
+    test("should return positive integer as string", () => {
+        isSymbol.mockReturnValue(false);
+        expect(toString(1205)).toBe("1205");
+    });
+
+    test("should return negative integer as string", () => {
+        isSymbol.mockReturnValue(false);
+        expect(toString(-1205)).toBe("-1205");
+    });
+
+    test("should return -0 as string", () => {
+        isSymbol.mockReturnValue(false);
+        expect(toString(-0)).toBe("-0");
+    });
+
+    test("should return float as string", () => {
+        isSymbol.mockReturnValue(false);
+        expect(toString(34.2)).toBe("34.2");
+    });
+
+});
+
+describe("should return object as a string", () => {
+
+    test("should return object as a string", () => {
+        isSymbol.mockReturnValue(false);
+        const randomObject = {"hello": 1, "hi": 50};
+        expect(toString(randomObject)).toBe("{hello: 1, hi: 50}");
+    });
+
+});
+
 
