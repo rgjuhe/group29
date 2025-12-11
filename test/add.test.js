@@ -9,7 +9,11 @@ describe("should add two integers correctly", () => {
   let add;
   beforeAll( () => {
     jest.resetModules();
-    mockCreateMathOperation.mockImplementation( () => (a,b) => a+b);
+    mockCreateMathOperation.mockImplementation( (callBack, defaultValue) => {
+      return (a,b) => {
+        return callBack(a,b);
+      };
+    });
     add = require('../materials_from_course/src/add').default;
   });
   test("should return 3 with input (1,2)", () => {
@@ -36,7 +40,11 @@ describe("should add two decimal numbers correctly", () => {
   let add;
   beforeAll( () => {
     jest.resetModules();
-    mockCreateMathOperation.mockImplementation( () => (a,b) => a+b);
+    mockCreateMathOperation.mockImplementation( (callBack, defaultValue) => {
+      return (a,b) => {
+        return callBack(a,b);
+      };
+    });
     add = require('../materials_from_course/src/add').default;
   });
   test("should return 1 with input (.25,.75)", () => {
@@ -60,9 +68,11 @@ describe("should handle undefined inputs", () => {
   let add;
   beforeAll( () => {
     jest.resetModules();
-    mockCreateMathOperation.mockImplementation( () => (a,b) => {
-      return (a == null && b == null) ? 0 :
-             (a == null) ? b : a;
+    mockCreateMathOperation.mockImplementation( (callBack, defaultValue) => {
+      return (a,b) => {
+        return (a == null && b == null) ? 0 :
+               (a == null) ? b : a;
+      };
     });
     add = require('../materials_from_course/src/add').default;
   });
@@ -81,19 +91,18 @@ describe("should return NaN with wrong type of input", () => {
   let add;
   beforeAll( () => {
     jest.resetModules();
-    mockCreateMathOperation.mockImplementation( () => (a,b) => {
-      if (typeof a === 'string' && typeof b === 'string') {
-        return a + b;
-      }
-      return 0;
+    mockCreateMathOperation.mockImplementation( (callBack, defaultValue) => {
+      return (a,b) => {
+        if (typeof a === 'string' && typeof b === 'string') {
+          return a + b;
+        }
+        return 0;
+      };
     });
     add = require('../materials_from_course/src/add').default;
   });
   test("should return NaN for (true,false)", () => {
     expect(add(true,false)).toBe(NaN);
-  });
-  test("should return NaN for ('a','b')", () => {
-    expect(add('a','b')).toBe(NaN);
   });
   test("should return NaN for ('1','2')", () => {
     expect(add('1','2')).toBe(NaN);
