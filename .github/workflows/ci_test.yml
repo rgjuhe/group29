@@ -1,5 +1,5 @@
 name: Automated testing
-run-name: Automated testing, Jussi
+run-name: Automated testing
 on:
   push:
     branches:
