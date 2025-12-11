@@ -1,5 +1,5 @@
-name: Test running tests
-run-name: Testing if test workflow works
+name: Automated testing
+run-name: Automated testing, Jussi
 on:
   push:
     branches:
@@ -28,20 +28,20 @@ jobs:
       # Step 4: Run Jest tests with coverage
       - name: Run Jest tests
         run: npm test -- --json --outputFile=test-results.json
-        continue-on-error: true
-        
+        continue-on-error: true 
+
       # Step 5: Create issue if failing testsuite found
       - name: Create an issue if tests fail
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           failed_cases=$(jq -c -r '.testResults[] | select(.status == "failed") | .assertionResults[] | select(.status == "failed") | {suite: .ancestorTitles | join(" > "), test_name: .title}' test-results.json)
-          
+            
           if [ -z "$failed_cases" ]; then
-            echo "No failed test cases."
+            echo "No failed tests"
             exit 0
           fi
-          
+
           echo "$failed_cases" | while IFS= read -r case; do
             suite_name=$(echo "$case" | jq -r '.suite')
             test_name=$(echo "$case" | jq -r '.test_name')
@@ -49,15 +49,20 @@ jobs:
             ISSUE_TITLE="Failure in $suite_name - $test_name"
             ISSUE_BODY="**Test Suite**: $suite_name, **Test Case**: $test_name"
 
-            existing_issue=$(gh issue list --repo "${{ github.repository }}" --search "$ISSUE_TITLE" --json title --jq ".[] | select(.title == \"$ISSUE_TITLE\")")
-
+            existing_issue=$(gh issue list \
+              --repo "${{ github.repository }}" \
+              --state all \
+              --json title \
+              --jq ".[] | select(.title == \"$ISSUE_TITLE\")")
+              
             if [ -z "$existing_issue" ]; then
               gh issue create --title "$ISSUE_TITLE" --body "$ISSUE_BODY" --repo "${{ github.repository }}"
             fi
           done
 
-      # Step 5: Generate Coveralls report
+      # Step 6: Generate Coveralls report
       - name: Coveralls
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
