@@ -35,11 +35,11 @@ describe("should return false when some item's type doesn't match predicate", ()
   });
 });
 
-describe("should return handle undefined input correctly", () => {
-  test("should return true for undefined array", () => {
-    expect(every(undefined, Boolean)).toBe(true);
+describe("should handle undefined input correctly", () => {
+  test("should return throw TypeError for undefined array", () => {
+    expect( () => {every(undefined, Boolean);}).toThrow(TypeError);
   });
-  test("should throw typeError for undefined predicate", () => {
+  test("should throw TypeError for undefined predicate", () => {
     expect( () => {every([1,2], undefined);}).toThrow(TypeError);
   });
 });
