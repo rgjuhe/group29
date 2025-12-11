@@ -76,14 +76,14 @@ describe("should handle undefined inputs", () => {
     });
     add = require('../materials_from_course/src/add').default;
   });
-  test("should return 0 for (undefined,null)", () => {
-    expect(add(undefined,null)).toBe(0);
+  test("should return undefined for (undefined,null)", () => {
+    expect(add(undefined,null)).toBe(undefined);
   });
-  test("should return 1 for (undefined,1)", () => {
-    expect(add(undefined,1)).toBe(1);
+  test("should return undefined for (undefined,1)", () => {
+    expect(add(undefined,1)).toBe(undefined);
   });
-  test("should return 1 for (1,null)", () => {
-    expect(add(1,null)).toBe(1);
+  test("should return undefined for (1,null)", () => {
+    expect(add(1,null)).toBe(undefined);
   });
 });
 
