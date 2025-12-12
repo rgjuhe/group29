@@ -27,8 +27,11 @@ describe("should return correct keys for arrays", () => {
   });
   test("should return ['0','1','2'] for ['a','b','c']", () => {
     const arr = ['a','b','c'];
-    
     expect(keys(arr)).toEqual(["0","1","2"]);
+  });
+  test("should return [] for []", () => {
+    const arr = [];
+    expect(keys(arr)).toEqual([]);
   });
   test("should handle large arrays", () => {
     const size = 100000;
@@ -60,7 +63,7 @@ describe("should return correct keys for other arrayLike inputs", () => {
   }); 
 });
 
-describe("Should return correct keys for simple objects", () => {
+describe("Should return correct keys for objects", () => {
   let keys;
   beforeAll( () => {
     jest.resetModules();
@@ -72,8 +75,38 @@ describe("Should return correct keys for simple objects", () => {
     });
     keys = require('../materials_from_course/src/keys').default;
   });
-  test("", () => {
+  test("should return ['a','b','c'] for {'a': 2, 'b':1, 'c':1}", () => {
     const obj = {'a': 2, 'b':1, 'c':1};
     expect(keys(obj)).toEqual(['a','b','c']);
-  })
+  });
+  test("should return ['a','b','c'] for {'a': {'d': [1,2]}, 'b':1, 'c':1}", () => {
+    const obj = {'a': {'d': [1,2]}, 'b':1, 'c':1};
+    expect(keys(obj)).toEqual(['a','b','c']);
+  });
+  test("should return [] for {}", () => {
+    const obj = {};
+    expect(keys(obj)).toEqual([]);
+  });
+});
+
+describe("Should handle undefined input", () => {
+  let keys;
+  beforeAll( () => {
+    jest.resetModules();
+    mockArrayLikeKeys.mockImplementation( () => {
+      return;
+    });
+    mockIsArrayLike.mockImplementation( (value) => {
+      return false;
+    });
+    keys = require('../materials_from_course/src/keys').default;
+  });
+  test("should return [] for null", () => {
+    const obj = null;
+    expect(keys(obj)).toEqual([]);
+  });
+  test("should return [] for undefined", () => {
+    const obj = undefined;
+    expect(keys(obj)).toEqual([]);
+  });
 });
