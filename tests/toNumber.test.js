@@ -43,7 +43,7 @@ describe("should return symbol as NaN", () => {
 
 });
 
-describe("should return correct values for objects", () => {
+describe("should return correct values for objects and functions", () => {
     
     test("should return object as NaN", () => {
         isObject.mockReturnValue(true);
@@ -61,6 +61,15 @@ describe("should return correct values for objects", () => {
         isObject.mockReturnValue(true);
         isSymbol.mockReturnValue(false);
         expect(toNumber([4])).toBe(4);
+    });
+
+    test("should return value when valueOf is forced to be something else than a function", () => {
+        isObject.mockReturnValueOnce(true);
+        isObject.mockReturnValueOnce(false);
+        isSymbol.mockReturnValue(false);
+        const num = new Number(23); // using a wrapper so the if branch will be correct
+        num.valueOf = 2;
+        expect(toNumber(num)).toBe(23);
     });
 
 });
@@ -108,19 +117,42 @@ describe("should return correct values for binary, octal and hexadecimal numbers
     test("should return octal as integer", () => {
         isObject.mockReturnValue(false);
         isSymbol.mockReturnValue(false);
-        expect(toNumber(0o10)).toBe(8);
+        expect(toNumber("0o10")).toBe(8);
     });
 
     test("should return binary as integer", () => {
         isObject.mockReturnValue(false);
         isSymbol.mockReturnValue(false);
-        expect(toNumber(0b00000010)).toBe(2);
+        expect(toNumber("0b00000010")).toBe(2);
     });
 
     test("should return hexadecimal as integer", () => {
         isObject.mockReturnValue(false);
         isSymbol.mockReturnValue(false);
-        expect(toNumber(0xFF)).toBe(255);
+        expect(toNumber("0x01")).toBe(1);
     });
+
+    test("should return NaN for bad hexadecimal number", () => {
+        isObject.mockReturnValue(false);
+        isSymbol.mockReturnValue(false);
+        expect(toNumber("0xZZ")).toBe(NaN);
+    });
+
+});
+
+describe("should return correct result for boolean", () => {
+    
+    test("should return 0 for false", () => {
+        isObject.mockReturnValue(false);
+        isSymbol.mockReturnValue(false);
+        expect(toNumber(false)).toBe(0);
+    });
+
+    test("should return 1 for true", () => {
+        isObject.mockReturnValue(false);
+        isSymbol.mockReturnValue(false);
+        expect(toNumber(true)).toBe(1);
+    });
+
 
 });
