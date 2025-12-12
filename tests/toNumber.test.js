@@ -67,7 +67,7 @@ describe("should return correct values for objects and functions", () => {
         isObject.mockReturnValueOnce(true);
         isObject.mockReturnValueOnce(false);
         isSymbol.mockReturnValue(false);
-        const num = new Number(23); // using a wrapper so the if branch will be correct
+        const num = new Number(23);
         num.valueOf = 2;
         expect(toNumber(num)).toBe(23);
     });
@@ -92,6 +92,12 @@ describe("should return correct values for strings", () => {
         isObject.mockReturnValue(false);
         isSymbol.mockReturnValue(false);
         expect(toNumber("[1]")).toBe(NaN);
+    });
+
+    test("should return empty string as 0", () => {
+        isObject.mockReturnValue(false);
+        isSymbol.mockReturnValue(false);
+        expect(toNumber("")).toBe(0);
     });
 
 });
@@ -132,15 +138,15 @@ describe("should return correct values for binary, octal and hexadecimal numbers
         expect(toNumber("0x01")).toBe(1);
     });
 
-    test("should return NaN for bad hexadecimal number", () => {
+    test("should return NaN for bad hexadecimal", () => {
         isObject.mockReturnValue(false);
         isSymbol.mockReturnValue(false);
-        expect(toNumber("0xZZ")).toBe(NaN);
+        expect(toNumber("-0x1")).toBe(NaN); 
     });
 
 });
 
-describe("should return correct result for boolean", () => {
+describe("should return correct result for boolean and null", () => {
     
     test("should return 0 for false", () => {
         isObject.mockReturnValue(false);
@@ -154,5 +160,16 @@ describe("should return correct result for boolean", () => {
         expect(toNumber(true)).toBe(1);
     });
 
+    test("should return 0 for null", () => {
+        isObject.mockReturnValue(false);
+        isSymbol.mockReturnValue(false);
+        expect(toNumber(null)).toBe(0);
+    });
 
 });
+
+
+  
+
+
+
